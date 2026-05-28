@@ -117,13 +117,13 @@ canvas#bg {
 /* ── STRIPS VIEW ── */
 .strips-view {
   display: flex; flex-direction: column;
-  padding: 30px 11%;
+  padding: clamp(16px, 2.5vh, 30px) 11%;
   height: 100%;
   justify-content: center;
 }
 
 .intro {
-  margin-bottom: 24px;
+  margin-bottom: clamp(10px, 2vh, 24px);
 }
 .intro-tag {
   font-family: 'Cinzel', serif;
@@ -145,7 +145,7 @@ canvas#bg {
   font-size: 7px; font-weight: 400;
   letter-spacing: .32em; text-transform: uppercase;
   color: rgba(200,169,110,0.3);
-  margin-bottom: 8px; margin-top: 16px;
+  margin-bottom: clamp(4px, 0.7vh, 8px); margin-top: clamp(8px, 1.5vh, 16px);
   display: flex; align-items: center; gap: 10px;
 }
 .group-label::after {
@@ -154,7 +154,7 @@ canvas#bg {
 }
 .group-label:first-of-type { margin-top: 0; }
 
-.strips-list { display: flex; flex-direction: column; gap: 7px; }
+.strips-list { display: flex; flex-direction: column; gap: clamp(4px, 0.8vh, 7px); }
 
 .strip {
   display: flex; align-items: center;
@@ -162,7 +162,7 @@ canvas#bg {
   border: 0.5px solid rgba(200,169,110,0.07);
   border-left: 1.5px solid rgba(200,169,110,0.28);
   border-radius: 3px;
-  height: 62px;
+  height: clamp(48px, 7.5vh, 62px);
   cursor: pointer;
   position: relative; overflow: hidden;
   text-decoration: none; color: inherit;
@@ -491,7 +491,7 @@ canvas#bg {
 }
 .tarot-card {
   z-index: 1; margin-top: auto; margin-bottom: 10px;
-  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  display: flex; flex-direction: column; align-items: center; gap: clamp(4px, 0.8vh, 7px);
 }
 .card-frame {
   width: 60px; height: 98px;
@@ -523,6 +523,73 @@ canvas#bg {
   color: rgba(200,169,110,0.2); text-align: center; line-height: 2;
   z-index: 1;
 }
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  html, body { overflow: hidden; }
+
+  .layout {
+    grid-template-columns: 56px 1fr;
+    grid-template-rows: 1fr;
+    height: 100vh;
+  }
+
+  .right-col { display: none; }
+
+  .sidebar {
+    width: 56px;
+    padding: 18px 0 16px;
+    gap: 0;
+  }
+
+  .logo-ring { width: 38px; height: 38px; margin-bottom: 16px; }
+  .logo-letter { font-size: 11px; }
+  .sb-rule { margin-bottom: 14px; }
+  .sb-item { margin-bottom: 10px; }
+  .sb-btn { width: 32px; height: 32px; }
+  .sb-btn svg { width: 13px; height: 13px; }
+  .sb-lbl { font-size: 5.5px; }
+
+  .strips-view {
+    padding: clamp(14px, 3vw, 24px) clamp(12px, 4vw, 20px);
+  }
+
+  .intro-tag { font-size: 7px; letter-spacing: .3em; }
+  .intro-phrase { font-size: 13px; }
+
+  .group-label { font-size: 6.5px; letter-spacing: .22em; }
+
+  .strip { height: clamp(52px, 9vw, 62px); border-radius: 3px; }
+  .strip-num { display: none; }
+  .s-ico { width: 44px; }
+  .s-ico svg { width: 15px; height: 15px; }
+  .s-title { font-size: 8.5px; letter-spacing: .16em; }
+  .s-sub { font-size: 11px; }
+  .s-arrow { width: 36px; }
+  .s-arrow span { font-size: 13px; }
+
+  .inner-panel { padding: clamp(18px, 4vw, 28px) clamp(14px, 4vw, 24px); }
+  .panel-title { font-size: 1.4rem; }
+  .btn-back { padding: 7px 14px; font-size: 7.5px; }
+
+  .form-grid { grid-template-columns: 1fr; gap: 10px; }
+  .form-group.full { grid-column: 1; }
+  .form-input, .form-textarea, .form-select { font-size: 16px; padding: 9px 11px; }
+  .form-textarea { height: 60px; }
+  .form-label { font-size: 7px; }
+  .btn-send { padding: 10px 24px; font-size: 8px; }
+
+  .sobre-text { font-size: 14px; }
+
+  .strips-list { gap: clamp(4px, 1.2vw, 8px); }
+}
+
+@media (max-width: 380px) {
+  .s-sub { display: none; }
+  .s-title { font-size: 8px; }
+  .strip { height: 50px; }
+}
+
 </style>
 </head>
 <body>

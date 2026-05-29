@@ -524,70 +524,165 @@ canvas#bg {
   z-index: 1;
 }
 
+
+  .s-title { font-size: 8px; }
+  .strip { height: 50px; }
+}
+
+
 /* ── MOBILE ── */
 @media (max-width: 768px) {
-  html, body { overflow: hidden; }
+  html, body { overflow: hidden; height: 100dvh; }
 
   .layout {
-    grid-template-columns: 56px 1fr;
-    grid-template-rows: 1fr;
-    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
   }
 
+  /* Hide desktop sidebar */
+  .sidebar { display: none; }
+
+  /* Hide right col */
   .right-col { display: none; }
 
-  .sidebar {
-    width: 56px;
-    padding: 18px 0 16px;
-    gap: 0;
+  /* TOP BAR */
+  .topbar {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    background: #111827;
+    border-bottom: 0.5px solid rgba(200,169,110,0.2);
+    padding: 0 20px;
+    height: 64px;
+    flex-shrink: 0;
+    z-index: 20;
+    position: relative;
   }
 
-  .logo-ring { width: 38px; height: 38px; margin-bottom: 16px; }
-  .logo-letter { font-size: 11px; }
-  .sb-rule { margin-bottom: 14px; }
-  .sb-item { margin-bottom: 10px; }
-  .sb-btn { width: 32px; height: 32px; }
-  .sb-btn svg { width: 13px; height: 13px; }
-  .sb-lbl { font-size: 5.5px; }
+  .topbar-logo {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(200,169,110,0.45);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; flex-shrink: 0;
+  }
+  .topbar-logo::before {
+    content: '';
+    position: absolute; inset: 4px;
+    border-radius: 50%;
+    border: 0.5px solid rgba(200,169,110,0.18);
+  }
+  .topbar-logo span {
+    font-family: 'Cinzel', serif;
+    font-size: 13px; font-weight: 600;
+    color: #C9A96E; letter-spacing: .06em;
+    position: relative; z-index: 1;
+  }
 
+  .topbar-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .topbar-btn {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 5px;
+    text-decoration: none;
+    background: none; border: none; cursor: pointer;
+    padding: 0;
+  }
+  .topbar-btn-inner {
+    width: 42px; height: 42px;
+    border: 0.5px solid rgba(200,169,110,0.25);
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color .25s, background .25s;
+  }
+  .topbar-btn:active .topbar-btn-inner,
+  .topbar-btn.active .topbar-btn-inner {
+    border-color: rgba(200,169,110,0.7);
+    background: rgba(200,169,110,0.1);
+  }
+  .topbar-btn svg {
+    width: 18px; height: 18px;
+    stroke: #C9A96E; fill: none;
+    stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .topbar-btn-lbl {
+    font-family: 'Cinzel', serif;
+    font-size: 7px; letter-spacing: .16em;
+    text-transform: uppercase;
+    color: rgba(200,169,110,0.45);
+  }
+
+  /* MAIN fills remaining height */
+  .main {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* STRIPS VIEW */
   .strips-view {
-    padding: clamp(14px, 3vw, 24px) clamp(12px, 4vw, 20px);
+    padding: 20px 16px 16px;
+    height: 100%;
+    justify-content: flex-start;
+    overflow: hidden;
   }
 
-  .intro-tag { font-size: 7px; letter-spacing: .3em; }
-  .intro-phrase { font-size: 13px; }
+  .intro { margin-bottom: 16px; }
+  .intro-tag { font-size: 8px; letter-spacing: .3em; }
+  .intro-phrase { font-size: 14px; }
 
-  .group-label { font-size: 6.5px; letter-spacing: .22em; }
+  .group-label {
+    font-size: 7px; letter-spacing: .25em;
+    margin-top: 12px; margin-bottom: 6px;
+  }
 
-  .strip { height: clamp(52px, 9vw, 62px); border-radius: 3px; }
+  .strips-list { gap: 5px; }
+
+  .strip {
+    height: clamp(52px, 9vh, 64px);
+    border-radius: 3px;
+  }
   .strip-num { display: none; }
-  .s-ico { width: 44px; }
-  .s-ico svg { width: 15px; height: 15px; }
-  .s-title { font-size: 8.5px; letter-spacing: .16em; }
-  .s-sub { font-size: 11px; }
-  .s-arrow { width: 36px; }
-  .s-arrow span { font-size: 13px; }
+  .s-ico { width: 48px; }
+  .s-ico svg { width: 17px; height: 17px; }
+  .s-title { font-size: 9px; letter-spacing: .18em; }
+  .s-sub { font-size: 12px; }
+  .s-arrow { width: 38px; }
+  .s-arrow span { font-size: 14px; }
 
-  .inner-panel { padding: clamp(18px, 4vw, 28px) clamp(14px, 4vw, 24px); }
+  /* INNER PANELS */
+  .inner-panel {
+    padding: 22px 18px 18px;
+  }
   .panel-title { font-size: 1.4rem; }
-  .btn-back { padding: 7px 14px; font-size: 7.5px; }
+  .btn-back { padding: 8px 16px; font-size: 7.5px; }
+  .sobre-text { font-size: 14px; line-height: 1.8; }
 
-  .form-grid { grid-template-columns: 1fr; gap: 10px; }
+  .form-grid { grid-template-columns: 1fr; gap: 10px 0; }
   .form-group.full { grid-column: 1; }
-  .form-input, .form-textarea, .form-select { font-size: 16px; padding: 9px 11px; }
-  .form-textarea { height: 60px; }
-  .form-label { font-size: 7px; }
-  .btn-send { padding: 10px 24px; font-size: 8px; }
+  .form-input, .form-textarea, .form-select {
+    font-size: 16px; padding: 10px 12px;
+  }
+  .form-textarea { height: 64px; }
+  .form-label { font-size: 7.5px; }
+  .btn-send { width: 100%; padding: 12px; font-size: 9px; text-align: center; }
+  .form-actions { justify-content: stretch; }
 
-  .sobre-text { font-size: 14px; }
-
-  .strips-list { gap: clamp(4px, 1.2vw, 8px); }
+  .success-title { font-size: 1.4rem; }
+  .success-sub { font-size: 14px; }
 }
 
 @media (max-width: 380px) {
   .s-sub { display: none; }
-  .s-title { font-size: 8px; }
+  .s-title { font-size: 8.5px; }
   .strip { height: 50px; }
+  .topbar { height: 58px; padding: 0 14px; }
+  .topbar-btn-inner { width: 38px; height: 38px; }
 }
 
 </style>
@@ -596,6 +691,31 @@ canvas#bg {
 
 <div class="layout">
   <canvas id="bg"></canvas>
+  <!-- MOBILE TOP BAR -->
+  <div class="topbar" style="display:none;">
+    <div class="topbar-logo"><span>DG</span></div>
+    <div class="topbar-icons">
+      <button class="topbar-btn" id="mob-btn-sobre-mi" onclick="openPanel('sobre-mi')" aria-label="Sobre mí">
+        <div class="topbar-btn-inner">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <span class="topbar-btn-lbl">Sobre&nbsp;mí</span>
+      </button>
+      <a class="topbar-btn" href="https://wa.me/34625748966" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <div class="topbar-btn-inner">
+          <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        </div>
+        <span class="topbar-btn-lbl">WhatsApp</span>
+      </a>
+      <a class="topbar-btn" href="mailto:aleyone@gmail.com" aria-label="Correo">
+        <div class="topbar-btn-inner">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <span class="topbar-btn-lbl">Correo</span>
+      </a>
+    </div>
+  </div>
+
 
   <!-- SIDEBAR -->
   <div class="sidebar">
@@ -963,6 +1083,8 @@ function openPanel(id){
     document.getElementById('panel-'+id).classList.add('visible');
     currentPanel = id;
     document.getElementById('btn-sobre-mi').classList.toggle('active', id==='sobre-mi');
+    var mob = document.getElementById('mob-btn-sobre-mi');
+    if(mob) mob.classList.toggle('active', id==='sobre-mi');
   }, 280);
 }
 
@@ -976,6 +1098,8 @@ function goHome(){
     sv.style.opacity = '1'; sv.style.transform = 'translateX(0)';
   }, 20);
   document.getElementById('btn-sobre-mi').classList.remove('active');
+  var mob = document.getElementById('mob-btn-sobre-mi');
+  if(mob) mob.classList.remove('active');
   currentPanel = null;
   resetForm('estudio'); resetForm('centro');
 }

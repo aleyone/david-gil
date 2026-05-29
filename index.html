@@ -17,6 +17,9 @@
   --ink-mid:   #2A3350;
   --ink-dim:   #5A6080;
   --gold:      #B8923A;
+  --strip-gold-bg: #C9A96E;
+  --strip-gold-dark: #A07830;
+  --strip-cream: #F5EDD8;
   --gold-lt:   #C9A96E;
   --gold-pale: rgba(184,146,58,0.13);
   --divider:   rgba(184,146,58,0.22);
@@ -173,25 +176,25 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);font-fami
 }
 .strip.visible{animation:strip-in .48s cubic-bezier(0.16,1,0.3,1) forwards;}
 @keyframes strip-in{to{opacity:1;transform:translateY(0);}}
-.strip::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 50%,rgba(184,146,58,0.1) 0%,transparent 55%);opacity:0;transition:opacity .32s;}
+.strip::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 50%,rgba(255,255,255,0.12) 0%,transparent 55%);opacity:0;transition:opacity .32s;}
 .strip:hover::before{opacity:1;}
-.strip:hover{background:#E3DAC8;border-left-color:var(--gold);box-shadow:-2px 0 10px rgba(184,146,58,0.18),0 2px 6px rgba(22,28,45,0.07);}
-.strip.tarot-strip{border-left-color:rgba(130,90,180,0.45);}
-.strip.tarot-strip:hover{border-left-color:rgba(150,100,200,0.85);box-shadow:-2px 0 12px rgba(130,90,180,0.15);}
+.strip:hover{background:linear-gradient(135deg,#EDD080,#DCAF50);border-left-color:rgba(255,255,255,0.6);box-shadow:-2px 0 12px rgba(184,146,58,0.35),0 3px 10px rgba(22,28,45,0.12);}
+.strip.tarot-strip{border-left-color:rgba(200,170,255,0.5);}
+.strip.tarot-strip:hover{border-left-color:rgba(220,190,255,0.8);box-shadow:-2px 0 14px rgba(130,90,180,0.25);}
 .strip.inactive{opacity:.28!important;pointer-events:none;transform:none!important;}
 
 .s-ico{width:46px;flex-shrink:0;display:flex;align-items:center;justify-content:center;z-index:1;}
-.s-ico svg{width:16px;height:16px;stroke:var(--gold);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .32s cubic-bezier(0.16,1,0.3,1);}
+.s-ico svg{width:16px;height:16px;stroke:#3A2800;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .32s cubic-bezier(0.16,1,0.3,1);}
 .strip:hover .s-ico svg{transform:scale(1.1);}
 .s-body{flex:1;padding:0 8px 0 0;min-width:0;z-index:1;}
-.s-title{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:letter-spacing .32s,color .32s;}
-.strip:hover .s-title{letter-spacing:.23em;color:var(--gold);}
-.s-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11.5px;color:var(--ink-dim);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .32s;}
-.strip:hover .s-sub{color:var(--ink-mid);}
-.s-arrow{width:34px;flex-shrink:0;height:100%;background:rgba(184,146,58,0.07);clip-path:polygon(9px 0%,100% 0%,100% 100%,9px 100%,0% 50%);display:flex;align-items:center;justify-content:center;transition:background .32s;z-index:1;}
-.strip:hover .s-arrow{background:rgba(184,146,58,0.18);}
-.s-arrow span{font-size:14px;color:var(--gold);margin-left:6px;line-height:1;transition:transform .32s cubic-bezier(0.16,1,0.3,1);}
-.strip:hover .s-arrow span{transform:translateX(3px);}
+.s-title{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#2A1F0A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:letter-spacing .32s,color .32s;}
+.strip:hover .s-title{letter-spacing:.23em;color:#1A1200;}
+.s-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11.5px;color:rgba(42,31,10,0.75);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .32s;}
+.strip:hover .s-sub{color:rgba(30,20,0,0.9);}
+.s-arrow{width:34px;flex-shrink:0;height:100%;background:rgba(0,0,0,0.1);clip-path:polygon(9px 0%,100% 0%,100% 100%,9px 100%,0% 50%);display:flex;align-items:center;justify-content:center;transition:background .32s;z-index:1;}
+.strip:hover .s-arrow{background:rgba(0,0,0,0.18);}
+.s-arrow span{font-size:14px;color:rgba(42,31,10,0.7);margin-left:6px;line-height:1;transition:transform .32s cubic-bezier(0.16,1,0.3,1);}
+.strip:hover .s-arrow span{transform:translateX(3px);color:#1A1200;}
 
 /* ── INNER PANELS ── */
 .inner-panel{position:absolute;inset:0;background:var(--bg);display:none;flex-direction:column;padding:30px clamp(20px,4%,40px) 26px;overflow:hidden;z-index:5;}
@@ -368,7 +371,7 @@ html,body{width:100%;height:100vh;overflow:hidden;background:var(--bg);font-fami
   </svg>
     <svg width="100%" height="100%" viewBox="0 0 1400 800"
       fill="none" xmlns="http://www.w3.org/2000/svg"
-      style="opacity:.25;position:absolute;inset:0;pointer-events:none;animation:breathe 9s ease-in-out infinite;">
+      style="opacity:1;position:absolute;inset:0;pointer-events:none;animation:breathe 9s ease-in-out infinite;">
     <!-- Top row only -->
     
     <g transform="scale(0.72) translate(200, 65)">

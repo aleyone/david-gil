@@ -132,21 +132,36 @@
     </div>
   </section>
 
-  <section class="rc-events" id="encuentros">
+  <section class="rc-events" id="encuentros" aria-busy="true" data-events-section>
     <div class="rc-section-head rc-reveal">
       <p class="rc-kicker">Calendario</p>
       <h2>Próximos encuentros</h2>
     </div>
-    <div class="rc-event-list">
-      <article class="rc-event" data-event-id="formacion-numerologia-compatibilidad" data-event-status="upcoming">
-        <time datetime="2026-06-07">7 de junio</time>
-        <div>
-          <span class="rc-event-type">Formación</span>
-          <h3>Numerología y compatibilidad numérica</h3>
-          <p>10:00–14:00h · Próximamente</p>
+    <div class="rc-event-list" id="rc-event-list" data-events-list role="status" aria-live="polite">
+      <article class="rc-event rc-event-skeleton" aria-hidden="true">
+        <div class="rc-event-skeleton-block rc-event-skeleton-date"></div>
+        <div class="rc-event-skeleton-body">
+          <div class="rc-event-skeleton-block rc-event-skeleton-line short"></div>
+          <div class="rc-event-skeleton-block rc-event-skeleton-line"></div>
+          <div class="rc-event-skeleton-block rc-event-skeleton-line mid"></div>
         </div>
-        <a class="rc-btn rc-btn-gold" href="mailto:aleyone@gmail.com">Más información</a>
+        <div class="rc-event-skeleton-block rc-event-skeleton-cta"></div>
       </article>
+      <article class="rc-event rc-event-skeleton" aria-hidden="true">
+        <div class="rc-event-skeleton-block rc-event-skeleton-date"></div>
+        <div class="rc-event-skeleton-body">
+          <div class="rc-event-skeleton-block rc-event-skeleton-line short"></div>
+          <div class="rc-event-skeleton-block rc-event-skeleton-line"></div>
+          <div class="rc-event-skeleton-block rc-event-skeleton-line mid"></div>
+        </div>
+        <div class="rc-event-skeleton-block rc-event-skeleton-cta"></div>
+      </article>
+      <p class="rc-visually-hidden">Cargando próximos encuentros…</p>
+    </div>
+    <div class="rc-events-more-wrap" data-events-more hidden>
+      <button type="button" class="rc-btn rc-btn-ghost rc-events-more" data-action="ver-mas-eventos" disabled aria-disabled="true">
+        Ver más eventos
+      </button>
     </div>
   </section>
 
@@ -247,5 +262,6 @@
   nodes.forEach(function(n){ io.observe(n); });
 })();
 </script>
+<script src="rc-eventos-home.js" defer></script>
 </body>
 </html>

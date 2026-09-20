@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/eventos", "destination": "/eventos.html" },
+    { "source": "/eventos/", "destination": "/eventos.html" },
+    { "source": "/eventos/:slug", "destination": "/eventos.html" }
+  ]
+}

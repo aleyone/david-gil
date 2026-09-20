@@ -211,6 +211,13 @@
     modalOpen = true;
   }
 
+  function restoreReturnScroll() {
+    if (typeof returnScrollY !== "number") return;
+    try {
+      window.scrollTo(0, returnScrollY);
+    } catch (e) {}
+  }
+
   function hideModalShell() {
     if (!modalRoot) return;
     modalRoot.hidden = true;
@@ -221,12 +228,16 @@
     openedViaPush = false;
     if (modalBody) modalBody.innerHTML = "";
     restoreReturnTitle();
-    if (lastTrigger && typeof lastTrigger.focus === "function") {
-      try {
-        lastTrigger.focus();
-      } catch (e) {}
-    }
+    restoreReturnScroll();
+    var trigger = lastTrigger;
     lastTrigger = null;
+    if (trigger && typeof trigger.focus === "function") {
+      setTimeout(function () {
+        try {
+          trigger.focus();
+        } catch (e) {}
+      }, 0);
+    }
   }
 
   function ctaExternoHtml(evento) {
@@ -439,7 +450,8 @@
     var shouldPush =
       !opts.fromHistory &&
       (opts.pushHistory === true ||
-        (opts.pushHistory !== false && origin === "list"));
+        (opts.pushHistory !== false &&
+          (origin === "list" || origin === "home")));
 
     if (opts.trigger) {
       lastTrigger = opts.trigger;
@@ -510,11 +522,6 @@
       target
     );
     hideModalShell();
-    if (typeof returnScrollY === "number") {
-      try {
-        window.scrollTo(0, returnScrollY);
-      } catch (e) {}
-    }
     setTimeout(function () {
       ignorePopstate = false;
     }, 0);
@@ -523,14 +530,22 @@
   function onPopState() {
     if (ignorePopstate) return;
     var slug = parseSlugFromPath(location.pathname);
+    var st = history.state && typeof history.state === "object" ? history.state : {};
     if (slug) {
+      /* Forward / restauración: reusar origin y return* del state si existen. */
       open({
         slug: slug,
-        origin: "direct",
+        origin: st.origin === "home" || st.origin === "list" || st.origin === "direct"
+          ? st.origin
+          : currentOrigin === "home"
+            ? "home"
+            : "direct",
         fromHistory: true,
-        returnUrl: returnUrl,
-        returnTitle: returnTitle,
-        returnScrollY: returnScrollY,
+        returnUrl: st.returnUrl != null ? st.returnUrl : returnUrl,
+        returnTitle: st.returnTitle != null ? st.returnTitle : returnTitle,
+        returnScrollY:
+          typeof st.returnScrollY === "number" ? st.returnScrollY : returnScrollY,
+        trigger: lastTrigger,
       });
       return;
     }
@@ -539,8 +554,10 @@
       else restoreReturnTitle();
       return;
     }
-    /* Preparado para 3C.3 (origin=home): cerrar al volver fuera del slug. */
-    if (modalOpen && currentOrigin === "home" && !slug) {
+    /* origin=home: Atrás vuelve a / o /#… sin servir eventos.html */
+    if (modalOpen && (currentOrigin === "home" || st.origin === "home")) {
+      if (typeof st.returnScrollY === "number") returnScrollY = st.returnScrollY;
+      if (st.returnTitle != null) returnTitle = st.returnTitle;
       hideModalShell();
     }
   }

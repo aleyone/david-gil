@@ -21,7 +21,9 @@
   var listEl = document.querySelector("[data-events-list]");
   var sectionEl = document.querySelector("[data-events-section]");
   var moreWrap = document.querySelector("[data-events-more]");
+  var detalle = typeof window !== "undefined" ? window.RcEventoDetalle : null;
   if (!listEl || !sectionEl) return;
+  if (detalle) detalle.ensureShell();
 
   function escapeHtml(value) {
     return String(value == null ? "" : value)
@@ -137,6 +139,8 @@
     var ver = slug
       ? '<a class="rc-btn rc-btn-ghost rc-event-link" href="/eventos/' +
         encodeURIComponent(slug) +
+        '" data-open-event="' +
+        escapeHtml(slug) +
         '">Ver encuentro</a>'
       : "";
     if (!externo && !ver) return "";
@@ -251,6 +255,30 @@
         setBusy(false);
       });
   }
+
+  listEl.addEventListener("click", function (e) {
+    if (!detalle) return;
+    var link = e.target.closest("[data-open-event]");
+    if (!link || !listEl.contains(link)) return;
+    if (e.defaultPrevented) return;
+    if (e.button != null && e.button !== 0) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    var slug = link.getAttribute("data-open-event") || "";
+    if (!slug && detalle.parseSlugFromPath) {
+      slug = detalle.parseSlugFromPath(link.getAttribute("href") || "");
+    }
+    if (!slug) return;
+    detalle.open({
+      slug: slug,
+      origin: "home",
+      returnUrl: location.pathname + location.search + location.hash,
+      returnScrollY: window.scrollY || window.pageYOffset || 0,
+      returnTitle: document.title,
+      trigger: link,
+      pushHistory: true,
+    });
+  });
 
   cargar();
 })();

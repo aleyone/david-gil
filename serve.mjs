@@ -15,13 +15,34 @@ const mime = {
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.svg': 'image/svg+xml',
+  '.json': 'application/json; charset=utf-8',
   '.woff2': 'font/woff2',
   '.ico': 'image/x-icon',
 };
 
+/**
+ * Equivalente local a vercel.json (solo rutas /eventos).
+ * /eventos y /eventos/{slug} → eventos.html (rewrite, URL intacta).
+ * Rutas desconocidas → 404 (sin SPA fallback global).
+ */
+function resolvePath(urlPath) {
+  if (urlPath === '/' || urlPath === '') return '/index.html';
+
+  if (urlPath === '/eventos' || urlPath === '/eventos/') {
+    return '/eventos.html';
+  }
+
+  const eventosSlug = urlPath.match(/^\/eventos\/([^/]+)\/?$/);
+  if (eventosSlug) {
+    return '/eventos.html';
+  }
+
+  return urlPath;
+}
+
 const server = http.createServer((req, res) => {
   const urlPath = decodeURIComponent((req.url || '/').split('?')[0]);
-  const rel = urlPath === '/' ? '/index.html' : urlPath;
+  const rel = resolvePath(urlPath);
   const file = path.normalize(path.join(root, rel));
   if (!file.startsWith(root)) {
     res.writeHead(403);

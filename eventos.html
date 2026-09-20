@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Próximos encuentros | Reconexión Consciente</title>
+<meta name="description" content="Información sobre próximos encuentros, talleres y experiencias de Reconexión Consciente.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Reconexión Consciente">
+<meta property="og:title" content="Próximos encuentros | Reconexión Consciente">
+<meta property="og:description" content="Información sobre próximos encuentros, talleres y experiencias de Reconexión Consciente.">
+<meta property="og:locale" content="es_ES">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/rc-home.css">
+</head>
+<body>
+
+<div class="rc-home rc-events-page" id="eventos">
+  <div class="rc-grain" aria-hidden="true"></div>
+
+  <header class="rc-header">
+    <a class="rc-logo" href="/">
+      <img src="/assets/spiral-gold.svg" alt="" width="34" height="34">
+      <span class="rc-logo-text">
+        <strong>Reconexión</strong>
+        <span>Consciente</span>
+      </span>
+    </a>
+    <button class="rc-nav-toggle" type="button" aria-expanded="false" aria-controls="rc-nav-panel-eventos" aria-label="Abrir menú">
+      <span></span>
+    </button>
+    <nav class="rc-nav" id="rc-nav-panel-eventos">
+      <a href="/">Inicio</a>
+      <a href="/#experiencias">Experiencias</a>
+      <a href="/#encuentros">Encuentros</a>
+      <a href="/#sobre-mi">Sobre mí</a>
+    </nav>
+    <p class="rc-header-tagline">El conocimiento que buscas ya está en ti.</p>
+    <a class="rc-header-cta" href="/">Volver al inicio</a>
+  </header>
+
+  <main class="rc-events-shell" id="rc-events-shell">
+    <div class="rc-section-head">
+      <p class="rc-kicker">Calendario</p>
+      <h1>Próximos encuentros</h1>
+    </div>
+    <p class="rc-events-placeholder">
+      Los próximos encuentros de Reconexión Consciente aparecerán aquí.
+    </p>
+  </main>
+
+  <footer class="rc-footer">
+    <div class="rc-footer-inner">
+      <div>
+        <strong>Reconexión Consciente</strong>
+        <p class="rc-footer-tag">El conocimiento que buscas ya está en ti.</p>
+      </div>
+      <nav class="rc-footer-links">
+        <a href="/">Inicio</a>
+        <a href="/#experiencias">Experiencias</a>
+        <a href="/#encuentros">Encuentros</a>
+        <a href="mailto:aleyone@gmail.com">Contacto</a>
+      </nav>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var btn=document.querySelector('.rc-nav-toggle');
+  var panel=document.getElementById('rc-nav-panel-eventos');
+  var scrollLockY=0;
+  if(btn&&panel){
+    function setOpen(open){
+      var isOpen=document.body.classList.contains('rc-nav-open');
+      if(open===isOpen) return;
+      btn.setAttribute('aria-expanded', open?'true':'false');
+      btn.setAttribute('aria-label', open?'Cerrar menú':'Abrir menú');
+      if(open){
+        scrollLockY=window.scrollY||window.pageYOffset||0;
+        document.documentElement.classList.add('rc-nav-open');
+        document.body.classList.add('rc-nav-open');
+        document.body.style.top='-'+scrollLockY+'px';
+      }else{
+        document.documentElement.classList.remove('rc-nav-open');
+        document.body.classList.remove('rc-nav-open');
+        document.body.style.top='';
+        window.scrollTo(0, scrollLockY);
+      }
+    }
+    btn.addEventListener('click', function(){
+      setOpen(btn.getAttribute('aria-expanded')!=='true');
+    });
+    panel.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ setOpen(false); });
+    });
+  }
+})();
+</script>
+</body>
+</html>

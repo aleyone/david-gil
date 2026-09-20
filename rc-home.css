@@ -934,6 +934,45 @@ body.rc-nav-open{
   border:0;
 }
 
+/* Shell público /eventos (fase 3A — placeholder) */
+.rc-events-page .rc-header{
+  background:rgba(42,10,16,.92);
+}
+
+.rc-events-shell{
+  width:min(1180px, calc(100% - 48px));
+  margin:0 auto;
+  padding:72px 0 96px;
+  min-height:48vh;
+}
+
+.rc-events-shell .rc-section-head{
+  padding:0 0 20px;
+}
+
+.rc-events-shell h1{
+  font-family:var(--rc-serif);
+  font-weight:400;
+  font-size:clamp(2rem, 4vw, 2.8rem);
+  color:var(--rc-burgundy);
+  line-height:1.2;
+  margin:0;
+}
+
+.rc-events-shell .rc-kicker{
+  color:var(--rc-wine);
+  margin-bottom:10px;
+}
+
+.rc-events-placeholder{
+  margin:0;
+  max-width:42ch;
+  font-weight:300;
+  font-size:1.05rem;
+  line-height:1.7;
+  color:var(--rc-ink-soft);
+}
+
 /* ── About ── */
 .rc-about{
   position:relative;

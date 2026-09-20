@@ -1,5 +1,5 @@
 /**
- * Listado público /eventos — API Admin.
+ * Agenda pública /eventos — API Admin.
  * El detalle modal vive en rc-evento-detalle.js.
  * Fuente de verdad: Admin. Sin Firebase en el navegador.
  */
@@ -17,12 +17,6 @@
     feria: "Feria",
     encuentro: "Encuentro",
     otro: "Otro",
-  };
-
-  var ETIQUETA_MODALIDAD = {
-    presencial: "Presencial",
-    online: "Online",
-    hibrido: "Híbrido",
   };
 
   var listEl = document.querySelector("[data-events-page-list]");
@@ -56,8 +50,24 @@
     }).format(new Date(iso));
   }
 
+  function ymMadrid(iso) {
+    return ymdMadrid(iso).slice(0, 7);
+  }
+
   function formatDiaLargo(iso) {
     return formatParts(iso, { day: "numeric", month: "long" });
+  }
+
+  function formatDiaNum(iso) {
+    return formatParts(iso, { day: "numeric" });
+  }
+
+  function formatMesAbrev(iso) {
+    var mes = formatParts(iso, { month: "short" })
+      .replace(/\./g, "")
+      .trim()
+      .toLocaleUpperCase("es-ES");
+    return mes.slice(0, 3);
   }
 
   function formatHora(iso) {
@@ -75,11 +85,63 @@
     return t >= ini && t <= fin;
   }
 
-  function etiquetaFecha(evento) {
+  function capitalizeMes(value) {
+    var s = String(value || "");
+    if (!s) return s;
+    return s.charAt(0).toLocaleUpperCase("es-ES") + s.slice(1);
+  }
+
+  function etiquetaFechaAccesible(evento) {
     if (esMismoDia(evento.fechaInicio, evento.fechaFin)) {
       return formatDiaLargo(evento.fechaInicio);
     }
     return formatDiaLargo(evento.fechaInicio) + " – " + formatDiaLargo(evento.fechaFin);
+  }
+
+  function etiquetaFechaCompactaHtml(evento) {
+    var ini = evento.fechaInicio;
+    var fin = evento.fechaFin;
+    if (esMismoDia(ini, fin)) {
+      return (
+        '<span class="rc-agenda-date-day">' +
+        escapeHtml(formatDiaNum(ini)) +
+        "</span>" +
+        '<span class="rc-agenda-date-month">' +
+        escapeHtml(formatMesAbrev(ini)) +
+        "</span>"
+      );
+    }
+    if (ymMadrid(ini) === ymMadrid(fin)) {
+      return (
+        '<span class="rc-agenda-date-day">' +
+        escapeHtml(formatDiaNum(ini) + "–" + formatDiaNum(fin)) +
+        "</span>" +
+        '<span class="rc-agenda-date-month">' +
+        escapeHtml(formatMesAbrev(ini)) +
+        "</span>"
+      );
+    }
+    return (
+      '<span class="rc-agenda-date-range">' +
+      '<span class="rc-agenda-date-part">' +
+      '<span class="rc-agenda-date-day">' +
+      escapeHtml(formatDiaNum(ini)) +
+      "</span>" +
+      '<span class="rc-agenda-date-month">' +
+      escapeHtml(formatMesAbrev(ini)) +
+      "</span>" +
+      "</span>" +
+      '<span class="rc-agenda-date-sep" aria-hidden="true">—</span>' +
+      '<span class="rc-agenda-date-part">' +
+      '<span class="rc-agenda-date-day">' +
+      escapeHtml(formatDiaNum(fin)) +
+      "</span>" +
+      '<span class="rc-agenda-date-month">' +
+      escapeHtml(formatMesAbrev(fin)) +
+      "</span>" +
+      "</span>" +
+      "</span>"
+    );
   }
 
   function etiquetaHorario(evento) {
@@ -95,7 +157,7 @@
       return hIni.replace(" h", "") + "–" + hFin;
     }
     return (
-      formatHora(evento.fechaInicio) +
+      formatHora(evento.fechaInicio).replace(" h", "") +
       " – " +
       formatDiaLargo(evento.fechaFin) +
       " " +
@@ -123,42 +185,59 @@
     return "";
   }
 
+  function groupByMonth(eventos) {
+    var groups = [];
+    var index = Object.create(null);
+    eventos.forEach(function (ev) {
+      var key = ymMadrid(ev.fechaInicio);
+      if (!index[key]) {
+        index[key] = {
+          key: key,
+          mes: capitalizeMes(formatParts(ev.fechaInicio, { month: "long" })),
+          anio: formatParts(ev.fechaInicio, { year: "numeric" }),
+          eventos: [],
+        };
+        groups.push(index[key]);
+      }
+      index[key].eventos.push(ev);
+    });
+    return groups;
+  }
+
   function tarjetaHtml(evento, ahora) {
     var tipo = ETIQUETA_TIPO[evento.tipo] || "Encuentro";
-    var modalidad = ETIQUETA_MODALIDAD[evento.modalidad] || "";
     var slug = String(evento.slug || "").trim();
-    var classes = "rc-events-card";
+    var classes = "rc-agenda-item";
     if (evento.destacado) classes += " is-featured";
     if (estaEnCurso(evento, ahora)) classes += " is-ongoing";
 
     var media = evento.imagenUrl
-      ? '<div class="rc-events-card-media"><img src="' +
+      ? '<div class="rc-agenda-media"><img src="' +
         escapeHtml(evento.imagenUrl) +
         '" alt="Cartel de ' +
         escapeHtml(evento.titulo) +
-        '" loading="lazy" decoding="async" width="240" height="320"></div>'
-      : '<div class="rc-events-card-media is-empty" aria-hidden="true"></div>';
+        '" loading="lazy" decoding="async" width="160" height="213"></div>'
+      : '<div class="rc-agenda-media is-empty" aria-hidden="true"></div>';
 
     var badge = evento.destacado
-      ? '<span class="rc-events-card-badge">Destacado</span>'
+      ? '<span class="rc-agenda-badge">Destacado</span>'
       : "";
     var enCurso = estaEnCurso(evento, ahora)
-      ? '<span class="rc-events-card-status">En curso</span>'
+      ? '<span class="rc-agenda-status">En curso</span>'
       : "";
 
     var metaBits = [];
-    if (modalidad) metaBits.push(modalidad);
     var sitio = [evento.lugar, evento.localidad].filter(Boolean).join(" · ");
     if (sitio) metaBits.push(sitio);
     if (evento.precioTexto) metaBits.push(evento.precioTexto);
 
     var desc = (evento.descripcionCorta || "").trim();
     var descHtml = desc
-      ? '<p class="rc-events-card-desc">' + escapeHtml(desc) + "</p>"
+      ? '<p class="rc-agenda-desc">' + escapeHtml(desc) + "</p>"
       : "";
 
     var verEncuentro = slug
-      ? '<a class="rc-btn rc-btn-ghost rc-events-card-link" href="/eventos/' +
+      ? '<a class="rc-btn rc-btn-ghost rc-agenda-link" href="/eventos/' +
         encodeURIComponent(slug) +
         '" data-open-event="' +
         escapeHtml(slug) +
@@ -175,34 +254,63 @@
       '" data-event-slug="' +
       escapeHtml(slug) +
       '">' +
+      '<time class="rc-agenda-date" datetime="' +
+      escapeHtml(ymdMadrid(evento.fechaInicio)) +
+      '" aria-label="' +
+      escapeHtml(etiquetaFechaAccesible(evento)) +
+      '">' +
+      etiquetaFechaCompactaHtml(evento) +
+      "</time>" +
       media +
-      '<div class="rc-events-card-body">' +
-      '<div class="rc-events-card-meta">' +
-      '<span class="rc-events-card-type">' +
+      '<div class="rc-agenda-body">' +
+      '<div class="rc-agenda-meta">' +
+      '<span class="rc-agenda-type">' +
       escapeHtml(tipo) +
       "</span>" +
       badge +
       enCurso +
       "</div>" +
-      '<time class="rc-events-card-date" datetime="' +
-      escapeHtml(ymdMadrid(evento.fechaInicio)) +
-      '">' +
-      escapeHtml(etiquetaFecha(evento)) +
-      "</time>" +
-      '<p class="rc-events-card-time">' +
-      escapeHtml(etiquetaHorario(evento)) +
-      "</p>" +
       "<h2>" +
       escapeHtml(evento.titulo) +
       "</h2>" +
-      descHtml +
+      '<p class="rc-agenda-time">' +
+      escapeHtml(etiquetaHorario(evento)) +
+      "</p>" +
       (metaBits.length
-        ? '<p class="rc-events-card-place">' + escapeHtml(metaBits.join(" · ")) + "</p>"
+        ? '<p class="rc-agenda-place">' + escapeHtml(metaBits.join(" · ")) + "</p>"
         : "") +
+      descHtml +
       (acciones
-        ? '<div class="rc-events-card-actions">' + acciones + "</div>"
+        ? '<div class="rc-agenda-actions">' + acciones + "</div>"
         : "") +
       "</div></article>"
+    );
+  }
+
+  function monthSectionHtml(group, ahora) {
+    return (
+      '<section class="rc-agenda-month" data-month-key="' +
+      escapeHtml(group.key) +
+      '">' +
+      '<h2 class="rc-agenda-month-head">' +
+      '<span class="rc-agenda-month-line" aria-hidden="true"></span>' +
+      '<span class="rc-agenda-month-label">' +
+      '<span class="rc-agenda-month-name">' +
+      escapeHtml(group.mes) +
+      "</span>" +
+      '<span class="rc-agenda-month-year">' +
+      escapeHtml(group.anio) +
+      "</span>" +
+      "</span>" +
+      '<span class="rc-agenda-month-line" aria-hidden="true"></span>' +
+      "</h2>" +
+      '<div class="rc-agenda-month-list">' +
+      group.eventos
+        .map(function (ev) {
+          return tarjetaHtml(ev, ahora);
+        })
+        .join("") +
+      "</div></section>"
     );
   }
 
@@ -212,28 +320,28 @@
 
   function renderSkeleton() {
     listEl.innerHTML =
-      '<article class="rc-events-card rc-events-card-skeleton" aria-hidden="true">' +
-      '<div class="rc-events-card-media is-skel"></div>' +
-      '<div class="rc-events-card-body">' +
+      '<article class="rc-agenda-item rc-agenda-item-skeleton" aria-hidden="true">' +
+      '<div class="rc-agenda-date is-skel"></div>' +
+      '<div class="rc-agenda-media is-skel"></div>' +
+      '<div class="rc-agenda-body">' +
       '<div class="rc-events-skel-line short"></div>' +
       '<div class="rc-events-skel-line mid"></div>' +
       '<div class="rc-events-skel-line"></div>' +
-      '<div class="rc-events-skel-line long"></div>' +
       "</div></article>" +
-      '<article class="rc-events-card rc-events-card-skeleton" aria-hidden="true">' +
-      '<div class="rc-events-card-media is-skel"></div>' +
-      '<div class="rc-events-card-body">' +
+      '<article class="rc-agenda-item rc-agenda-item-skeleton" aria-hidden="true">' +
+      '<div class="rc-agenda-date is-skel"></div>' +
+      '<div class="rc-agenda-media is-skel"></div>' +
+      '<div class="rc-agenda-body">' +
       '<div class="rc-events-skel-line short"></div>' +
       '<div class="rc-events-skel-line mid"></div>' +
       '<div class="rc-events-skel-line"></div>' +
-      '<div class="rc-events-skel-line long"></div>' +
       "</div></article>" +
       '<p class="rc-visually-hidden">Cargando próximos encuentros…</p>';
   }
 
   function renderEmpty() {
     listEl.innerHTML =
-      '<p class="rc-events-page-empty">Ahora mismo no hay próximos encuentros programados.</p>';
+      '<p class="rc-events-page-empty">No hay próximos encuentros publicados en este momento.</p>';
   }
 
   function renderError() {
@@ -248,9 +356,10 @@
       renderEmpty();
       return;
     }
-    listEl.innerHTML = eventos
-      .map(function (ev) {
-        return tarjetaHtml(ev, ahora);
+    var groups = groupByMonth(eventos);
+    listEl.innerHTML = groups
+      .map(function (g) {
+        return monthSectionHtml(g, ahora);
       })
       .join("");
   }

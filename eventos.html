@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Próximos encuentros | Reconexión Consciente</title>
-<meta name="description" content="Información sobre próximos encuentros, talleres y experiencias de Reconexión Consciente.">
+<meta name="description" content="Agenda de próximos encuentros, talleres y experiencias de Reconexión Consciente.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Reconexión Consciente">
 <meta property="og:title" content="Próximos encuentros | Reconexión Consciente">
-<meta property="og:description" content="Información sobre próximos encuentros, talleres y experiencias de Reconexión Consciente.">
+<meta property="og:description" content="Agenda de próximos encuentros, talleres y experiencias de Reconexión Consciente.">
 <meta property="og:locale" content="es_ES">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +20,7 @@
 <div class="rc-home rc-events-page" id="eventos">
   <div class="rc-grain" aria-hidden="true"></div>
 
-  <header class="rc-header">
+  <header class="rc-events-topbar">
     <a class="rc-logo" href="/">
       <img src="/assets/spiral-gold.svg" alt="" width="34" height="34">
       <span class="rc-logo-text">
@@ -28,95 +28,54 @@
         <span>Consciente</span>
       </span>
     </a>
-    <button class="rc-nav-toggle" type="button" aria-expanded="false" aria-controls="rc-nav-panel-eventos" aria-label="Abrir menú">
-      <span></span>
-    </button>
-    <nav class="rc-nav" id="rc-nav-panel-eventos">
-      <a href="/">Inicio</a>
-      <a href="/#experiencias">Experiencias</a>
-      <a href="/#encuentros">Encuentros</a>
-      <a href="/#sobre-mi">Sobre mí</a>
-    </nav>
-    <p class="rc-header-tagline">El conocimiento que buscas ya está en ti.</p>
-    <a class="rc-header-cta" href="/">Volver al inicio</a>
+    <a class="rc-events-back" href="/">← Volver a Reconexión Consciente</a>
   </header>
 
   <main class="rc-events-shell" id="rc-events-shell" data-events-page aria-busy="true">
     <div class="rc-section-head">
-      <p class="rc-kicker">Calendario</p>
+      <p class="rc-kicker">Agenda</p>
       <h1>Próximos encuentros</h1>
     </div>
     <div class="rc-events-page-list" data-events-page-list role="status" aria-live="polite">
-      <article class="rc-events-card rc-events-card-skeleton" aria-hidden="true">
-        <div class="rc-events-card-media is-skel"></div>
-        <div class="rc-events-card-body">
+      <article class="rc-agenda-item rc-agenda-item-skeleton" aria-hidden="true">
+        <div class="rc-agenda-date is-skel"></div>
+        <div class="rc-agenda-media is-skel"></div>
+        <div class="rc-agenda-body">
           <div class="rc-events-skel-line short"></div>
           <div class="rc-events-skel-line mid"></div>
           <div class="rc-events-skel-line"></div>
-          <div class="rc-events-skel-line long"></div>
         </div>
       </article>
-      <article class="rc-events-card rc-events-card-skeleton" aria-hidden="true">
-        <div class="rc-events-card-media is-skel"></div>
-        <div class="rc-events-card-body">
+      <article class="rc-agenda-item rc-agenda-item-skeleton" aria-hidden="true">
+        <div class="rc-agenda-date is-skel"></div>
+        <div class="rc-agenda-media is-skel"></div>
+        <div class="rc-agenda-body">
           <div class="rc-events-skel-line short"></div>
           <div class="rc-events-skel-line mid"></div>
           <div class="rc-events-skel-line"></div>
-          <div class="rc-events-skel-line long"></div>
         </div>
       </article>
       <p class="rc-visually-hidden">Cargando próximos encuentros…</p>
     </div>
+    <p class="rc-events-foot-back">
+      <a href="/">← Volver a Reconexión Consciente</a>
+    </p>
   </main>
 
-  <footer class="rc-footer">
-    <div class="rc-footer-inner">
+  <footer class="rc-events-footer">
+    <div class="rc-events-footer-inner">
       <div>
         <strong>Reconexión Consciente</strong>
         <p class="rc-footer-tag">El conocimiento que buscas ya está en ti.</p>
       </div>
-      <nav class="rc-footer-links">
-        <a href="/">Inicio</a>
-        <a href="/#experiencias">Experiencias</a>
-        <a href="/#encuentros">Encuentros</a>
+      <div class="rc-events-footer-links">
+        <a href="/">Volver a Reconexión Consciente</a>
         <a href="mailto:aleyone@gmail.com">Contacto</a>
-      </nav>
+      </div>
     </div>
   </footer>
 </div>
 
-<script>
-(function(){
-  var btn=document.querySelector('.rc-nav-toggle');
-  var panel=document.getElementById('rc-nav-panel-eventos');
-  var scrollLockY=0;
-  if(btn&&panel){
-    function setOpen(open){
-      var isOpen=document.body.classList.contains('rc-nav-open');
-      if(open===isOpen) return;
-      btn.setAttribute('aria-expanded', open?'true':'false');
-      btn.setAttribute('aria-label', open?'Cerrar menú':'Abrir menú');
-      if(open){
-        scrollLockY=window.scrollY||window.pageYOffset||0;
-        document.documentElement.classList.add('rc-nav-open');
-        document.body.classList.add('rc-nav-open');
-        document.body.style.top='-'+scrollLockY+'px';
-      }else{
-        document.documentElement.classList.remove('rc-nav-open');
-        document.body.classList.remove('rc-nav-open');
-        document.body.style.top='';
-        window.scrollTo(0, scrollLockY);
-      }
-    }
-    btn.addEventListener('click', function(){
-      setOpen(btn.getAttribute('aria-expanded')!=='true');
-    });
-    panel.querySelectorAll('a').forEach(function(a){
-      a.addEventListener('click', function(){ setOpen(false); });
-    });
-  }
-})();
-</script>
 <script src="/rc-evento-detalle.js" defer></script>
 <script src="/rc-eventos.js" defer></script>
 </body>

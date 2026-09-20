@@ -68,14 +68,74 @@
     return t >= ini && t <= fin;
   }
 
-  function etiquetaFechaPrincipal(evento) {
-    if (evento.todoElDia || !esMismoDia(evento.fechaInicio, evento.fechaFin)) {
-      if (esMismoDia(evento.fechaInicio, evento.fechaFin)) {
-        return formatDiaLargo(evento.fechaInicio);
-      }
-      return formatDiaLargo(evento.fechaInicio) + " – " + formatDiaLargo(evento.fechaFin);
+  function formatDiaNum(iso) {
+    return formatParts(iso, { day: "numeric" });
+  }
+
+  function formatMesAbrev(iso) {
+    var mes = formatParts(iso, { month: "short" })
+      .replace(/\./g, "")
+      .trim()
+      .toLocaleUpperCase("es-ES");
+    return mes.slice(0, 3);
+  }
+
+  function ymMadrid(iso) {
+    return ymdMadrid(iso).slice(0, 7);
+  }
+
+  /** Fecha compacta visual para la columna de fecha (HTML interno de <time>). */
+  function etiquetaFechaCompactaHtml(evento) {
+    var ini = evento.fechaInicio;
+    var fin = evento.fechaFin;
+    if (esMismoDia(ini, fin)) {
+      return (
+        '<span class="rc-event-date-day">' +
+        escapeHtml(formatDiaNum(ini)) +
+        "</span>" +
+        '<span class="rc-event-date-month">' +
+        escapeHtml(formatMesAbrev(ini)) +
+        "</span>"
+      );
     }
-    return formatDiaLargo(evento.fechaInicio);
+    if (ymMadrid(ini) === ymMadrid(fin)) {
+      return (
+        '<span class="rc-event-date-day">' +
+        escapeHtml(formatDiaNum(ini) + "–" + formatDiaNum(fin)) +
+        "</span>" +
+        '<span class="rc-event-date-month">' +
+        escapeHtml(formatMesAbrev(ini)) +
+        "</span>"
+      );
+    }
+    return (
+      '<span class="rc-event-date-range">' +
+      '<span class="rc-event-date-part">' +
+      '<span class="rc-event-date-day">' +
+      escapeHtml(formatDiaNum(ini)) +
+      "</span>" +
+      '<span class="rc-event-date-month">' +
+      escapeHtml(formatMesAbrev(ini)) +
+      "</span>" +
+      "</span>" +
+      '<span class="rc-event-date-sep" aria-hidden="true">—</span>' +
+      '<span class="rc-event-date-part">' +
+      '<span class="rc-event-date-day">' +
+      escapeHtml(formatDiaNum(fin)) +
+      "</span>" +
+      '<span class="rc-event-date-month">' +
+      escapeHtml(formatMesAbrev(fin)) +
+      "</span>" +
+      "</span>" +
+      "</span>"
+    );
+  }
+
+  function etiquetaFechaAccesible(evento) {
+    if (esMismoDia(evento.fechaInicio, evento.fechaFin)) {
+      return formatDiaLargo(evento.fechaInicio);
+    }
+    return formatDiaLargo(evento.fechaInicio) + " – " + formatDiaLargo(evento.fechaFin);
   }
 
   function datetimeAttr(evento) {
@@ -180,10 +240,13 @@
       (estaEnCurso(evento, ahora) ? "ongoing" : "upcoming") +
       '">' +
       img +
-      '<time datetime="' +
+      '<div class="rc-event-content">' +
+      '<time class="rc-event-date" datetime="' +
       escapeHtml(datetimeAttr(evento)) +
+      '" aria-label="' +
+      escapeHtml(etiquetaFechaAccesible(evento)) +
       '">' +
-      escapeHtml(etiquetaFechaPrincipal(evento)) +
+      etiquetaFechaCompactaHtml(evento) +
       "</time>" +
       '<div class="rc-event-body">' +
       '<span class="rc-event-type">' +
@@ -196,6 +259,7 @@
       "<p>" +
       escapeHtml(lineaMeta(evento, ahora)) +
       "</p>" +
+      "</div>" +
       "</div>" +
       accionesHtml(evento) +
       "</article>"

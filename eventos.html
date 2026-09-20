@@ -85,32 +85,6 @@
   </footer>
 </div>
 
-<div
-  class="rc-events-modal"
-  data-events-modal
-  hidden
-  aria-hidden="true"
->
-  <div class="rc-events-modal-backdrop" data-events-modal-backdrop tabindex="-1"></div>
-  <div
-    class="rc-events-modal-panel"
-    data-events-modal-panel
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="rc-events-modal-title"
-  >
-    <div class="rc-events-modal-toolbar">
-      <button type="button" class="rc-events-modal-x" data-events-modal-close aria-label="Cerrar">
-        ×
-      </button>
-      <button type="button" class="rc-events-modal-cerrar" data-events-modal-close>
-        Cerrar
-      </button>
-    </div>
-    <div class="rc-events-modal-body" data-events-modal-body></div>
-  </div>
-</div>
-
 <script>
 (function(){
   var btn=document.querySelector('.rc-nav-toggle');
@@ -143,6 +117,7 @@
   }
 })();
 </script>
+<script src="/rc-evento-detalle.js" defer></script>
 <script src="/rc-eventos.js" defer></script>
 </body>
 </html>

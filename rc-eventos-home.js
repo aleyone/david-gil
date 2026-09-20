@@ -131,6 +131,18 @@
     return "";
   }
 
+  function accionesHtml(evento) {
+    var slug = String(evento.slug || "").trim();
+    var externo = ctaHtml(evento);
+    var ver = slug
+      ? '<a class="rc-btn rc-btn-ghost rc-event-link" href="/eventos/' +
+        encodeURIComponent(slug) +
+        '">Ver encuentro</a>'
+      : "";
+    if (!externo && !ver) return "";
+    return '<div class="rc-event-actions">' + externo + ver + "</div>";
+  }
+
   function tarjetaHtml(evento, ahora) {
     var tipo = ETIQUETA_TIPO[evento.tipo] || "Encuentro";
     var classes = "rc-event";
@@ -169,7 +181,7 @@
       '">' +
       escapeHtml(etiquetaFechaPrincipal(evento)) +
       "</time>" +
-      "<div class=\"rc-event-body\">" +
+      '<div class="rc-event-body">' +
       '<span class="rc-event-type">' +
       escapeHtml(tipo) +
       "</span>" +
@@ -181,7 +193,7 @@
       escapeHtml(lineaMeta(evento, ahora)) +
       "</p>" +
       "</div>" +
-      ctaHtml(evento) +
+      accionesHtml(evento) +
       "</article>"
     );
   }
